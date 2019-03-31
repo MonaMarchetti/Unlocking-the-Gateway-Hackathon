@@ -1,3 +1,46 @@
+<?php
+  function getar($el){
+
+    $server = "mysql:dbname=suitcase;host=localhost";
+    $user = "phpmyadmin";
+    $pwd = "user";
+    $db = "suitcase";
+
+    $mi = new pdo($server, $user, $pwd);
+
+    $req = $mi->prepare("
+    SELECT *
+    FROM saved_articles
+    ");
+    $req -> execute();
+
+    $resp = $req -> fetchAll(PDO::FETCH_ASSOC);
+
+    $ht = "<div class='cache'>";
+
+    foreach ($resp as $item){
+      if($item['ar_cat'] == $el){
+        switch($item['ar_state']){
+          case 'done':
+            $st = 'done';
+            break;
+          case 'reported':
+            $st = 'reported';
+            break;
+          case 'new':
+            $st = 'new';
+            break;
+        }
+        $na = $item['ar_name'];
+        $ht .= ('
+        <span><img src="assets/img/v.png"><span class='.$st.'>'.$na.'</span><img src="assets/img/mp.png"></span><br/>
+        ');
+      }
+    }
+    $ht .= '</div>';
+    echo($ht);
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,7 +55,7 @@
 	<meta name="Keywords"
 		content="europa,europa,car,vehicle,foreign,national,abroad,country,eu,commission,your europe,citizens,moving,working,living,studying,travelling">
 	<meta name="Description"
-		content="European Commission – Practical help and advice on EU citizen rights for your life, work and travel in another European Union country - Your Europe">
+	content="European Commission – Practical help and advice on EU citizen rights for your life, work and travel in another European Union country - Your Europe">
 	<meta name="Date" content="10/09/2012">
 	<meta name="last-modified" content="14/12/2017">
 	<meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -22,96 +65,140 @@
 	<meta content="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-144x144.png" property="og:image">
 	<meta property="og:site_name" content="Your Europe - Citizens">
 	<meta property="og:description"
-		content="European Commission – Practical help and advice on EU citizen rights for your life, work and travel in another European Union country - Your Europe">
+	content="European Commission – Practical help and advice on EU citizen rights for your life, work and travel in another European Union country - Your Europe">
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="@YourEuropeEu">
 	<meta name="twitter:creator" content="@YourEuropeEu">
 	<meta name="twitter:title" content="Help and advice for EU nationals and their family">
 	<meta name="twitter:description"
-		content="European Commission – Practical help and advice on EU citizen rights for your life, work and travel in another European Union country - Your Europe">
+	content="European Commission – Practical help and advice on EU citizen rights for your life, work and travel in another European Union country - Your Europe">
 	<meta name="twitter:image" content="https://europa.eu/youreurope/citizens/images/social-media-medium.png">
 	<link href="https://europa.eu/youreurope/citizens/index_en.htm" rel="canonical">
 	<link href="https://europa.eu/youreurope/citizens/indexamp_en.htm" rel="amphtml">
 	<link type="image/vnd.microsoft.icon"
-		href="https://europa.eu/european-union/sites/europaeu/themes/europaeu_theme/favicon.ico" rel="shortcut icon">
+	href="https://europa.eu/european-union/sites/europaeu/themes/europaeu_theme/favicon.ico" rel="shortcut icon">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-57x57.png" sizes="57x57"
-		rel="apple-touch-icon">
+	rel="apple-touch-icon">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-72x72.png" sizes="72x72"
-		rel="apple-touch-icon">
+	rel="apple-touch-icon">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-114x114.png" sizes="114x114"
-		rel="apple-touch-icon">
+	rel="apple-touch-icon">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-144x144.png" sizes="144x144"
-		rel="apple-touch-icon">
+	rel="apple-touch-icon">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-57x57-precomposed.png" sizes="57x57"
-		rel="apple-touch-icon-precomposed">
+	rel="apple-touch-icon-precomposed">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-72x72-precomposed.png" sizes="72x72"
-		rel="apple-touch-icon-precomposed">
+	rel="apple-touch-icon-precomposed">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-114x114-precomposed.png"
-		sizes="114x114" rel="apple-touch-icon-precomposed">
+	sizes="114x114" rel="apple-touch-icon-precomposed">
 	<link href="https://europa.eu/youreurope/citizens/images/touch-icons/apple-icon-144x144-precomposed.png"
-		sizes="144x144" rel="apple-touch-icon-precomposed">
-	<link href="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/europa-ye.css"
-		type="text/css" rel="stylesheet">
+	sizes="144x144" rel="apple-touch-icon-precomposed">
+	<link
+	href="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/europa-ye.css"
+	type="text/css" rel="stylesheet">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<title>Help and advice for EU nationals and their family - Your Europe</title>
 </head>
 
 <body class="citizens">
+
 	<a id="top-page"></a>
 	<header id="header-content">
 		<section>
 			<div class="flexiflex">
 				<div class="valiseIcon">
 					<button onclick="showValise()">
-						<span class="notify-badge">1</span>
-						<img src="assets/img/minivalise.png" alt="icone valise" />
-					</button>
+					
+							<img src="assets/img/minivalise.png" alt="icone valise" />
+						</button>
+					</div>
 				</div>
-			</div>
 		</section>
 		<section>
 			<div id="fonduTop">
 				<button onclick="closeValise()" id="closeX">X</button>
-				<div class="containerClosed">
-					<img src="/assets/img/valiseclosed.png"/>
+				<div id="containerClosed">
+					<img src="assets/img/valiseclosed.png" />
 					<div id="drapeaux">
-
-					</div>
-				</div>
-					<div class="containerVal">
-						<div class="ValImg">
-							<div class="row mt-5">
-								<div class="col-md-3">
-									<img src="assets/img/1.png">
-								</div>
-								<div class="col-md-3">
-									<img src="assets/img/2.png">
-								</div>
-								<div class="col-md-3">
-									<img src="assets/img/3.png">
-								</div>
-								<div class="col-md-3">
-									<img src="assets/img/4.png">
-								</div>
+						<div class="row">
+							<div class="offset-md-2"></div>
+							<div class="col-md-4">
+								<h2 class="text-center MERDE">FROM HERE</h2>
+								<img src="assets/img/belgiumflag.png" alt="">
 							</div>
-							<div class="row">
-								<div class="col-md-3">
-									<img src="assets/img/5.png">
-								</div>
-								<div class="col-md-3">
-									<img src="assets/img/6.png">
-								</div>
-								<div class="col-md-3">
-									<img src="assets/img/7.png">
-								</div>
-								<div class="col-md-3">
-									<img src="assets/img/fam.png">
-								</div>
+							<div class="col-md-1">
+								<h2 class="text-center toutou">TO</h2>
+							</div>
+							<div class="col-md-4">
+								<h2 class="text-center MERDE">THERE</h2>
+								<img src="assets/img/franceflag.png" alt="">
+							</div>
+						</div>
+						<div class="row">
+							<div class="offset-md-4"></div>
+							<div class="col-md-4">
+								<button onclick="transition()" id="gogo">
+									<h2 id='go' class="text-center">GO</h2>
+								</button>
 							</div>
 						</div>
 					</div>
+				</div>
+				<div id="containerVal">
+					<div class="ValImg">
+					
+						<div class="row mt-4">
+							<div class="col-md-3 shaketat">
+								<img src="assets/img/1.png" id="i1" width="130px">
+							</div>
 
+							<div class="col-md-3 shaketat">
+								<img src="assets/img/2.png" id="i2" width="130px">
+							</div>
+
+							<div onmouseover="displaylist(this)" onmouseout="removelist(this)"
+								class="col-md-3 shaketat">
+								<img src="assets/img/3.png" id="i3" width="130px">
+
+								<?php getar('health')  ?>
+
+							</div>
+
+							<div onmouseover="displaylist(this)" onmouseout="removelist(this)" class="col-md-3 shaketat">
+								<img src="assets/img/4.png" id="i4" width="130px">
+
+								<?php getar('voyage')  ?>
+
+							</div>
+
+						</div>
+						<div class="row">
+
+							<div class="col-md-3 shaketat">
+								<img src="assets/img/fam.png" id="i5" width="110px">
+
+							</div>
+
+							<div onmouseover="displaylist(this)" onmouseout="removelist(this)" class="col-md-3 shaketat">
+								<img src="assets/img/7.png" id="i6" width="100px">
+							</div>
+
+							<?php getar('education')  ?>
+
+							<div
+								class="col-md-3 shaketat">
+								<img src="assets/img/6.png" id="i7" width="130px">
+
+							</div>
+
+							<div onmouseover="displaylist(this)" onmouseout="removelist(this)" class="col-md-3 shaketat">
+								<img src="assets/img/5.png" id="8" class="trouduc" width="110px">
+							</div>
+							<?php getar('vehicles')  ?>
+						</div>
+					</div>
+				</div>
 		</section>
 		<section class="centered" id="eu-ye-header">
 			<a href="https://europa.eu/youreurope/index.htm#en" id="eu-ye-logo"><span>Your Europe</span>
@@ -121,107 +208,108 @@
 				</p>
 				<ul>
 					<li>
-						<a title="български" hreflang="bg" class="" href="https://europa.eu/youreurope/citizens/index_bg.htm"
-							lang="bg">български</a>
+						<a title="български" hreflang="bg" class=""
+							href="https://europa.eu/youreurope/citizens/index_bg.htm" lang="bg">български</a>
 					</li>
 					<li>
-						<a title="čeština" hreflang="cs" class="" href="https://europa.eu/youreurope/citizens/index_cs.htm"
-							lang="cs">čeština</a>
+						<a title="čeština" hreflang="cs" class=""
+							href="https://europa.eu/youreurope/citizens/index_cs.htm" lang="cs">čeština</a>
 					</li>
 					<li>
-						<a title="Dansk" hreflang="da" class="" href="https://europa.eu/youreurope/citizens/index_da.htm"
-							lang="da">Dansk</a>
+						<a title="Dansk" hreflang="da" class=""
+							href="https://europa.eu/youreurope/citizens/index_da.htm" lang="da">Dansk</a>
 					</li>
 					<li>
-						<a title="Deutsch" hreflang="de" class="" href="https://europa.eu/youreurope/citizens/index_de.htm"
-							lang="de">Deutsch</a>
+						<a title="Deutsch" hreflang="de" class=""
+							href="https://europa.eu/youreurope/citizens/index_de.htm" lang="de">Deutsch</a>
 					</li>
 					<li>
-						<a title="Eesti" hreflang="et" class="" href="https://europa.eu/youreurope/citizens/index_et.htm"
-							lang="et">Eesti</a>
+						<a title="Eesti" hreflang="et" class=""
+							href="https://europa.eu/youreurope/citizens/index_et.htm" lang="et">Eesti</a>
 					</li>
 					<li>
-						<a title="Ελληνικά" hreflang="el" class="" href="https://europa.eu/youreurope/citizens/index_el.htm"
-							lang="el">Ελληνικά</a>
+						<a title="Ελληνικά" hreflang="el" class=""
+							href="https://europa.eu/youreurope/citizens/index_el.htm" lang="el">Ελληνικά</a>
 					</li>
 					<li>
-						<a title="English" hreflang="en" class="active" href="https://europa.eu/youreurope/citizens/index_en.htm"
-							lang="en">English</a>
+						<a title="English" hreflang="en" class="active"
+							href="https://europa.eu/youreurope/citizens/index_en.htm" lang="en">English</a>
 					</li>
 					<li>
-						<a title="español" hreflang="es" class="" href="https://europa.eu/youreurope/citizens/index_es.htm"
-							lang="es">español</a>
+						<a title="español" hreflang="es" class=""
+							href="https://europa.eu/youreurope/citizens/index_es.htm" lang="es">español</a>
 					</li>
 					<li>
-						<a title="français" hreflang="fr" class="" href="https://europa.eu/youreurope/citizens/index_fr.htm"
-							lang="fr">français</a>
+						<a title="français" hreflang="fr" class=""
+							href="https://europa.eu/youreurope/citizens/index_fr.htm" lang="fr">français</a>
 					</li>
 					<li>
-						<a title="hrvatski" hreflang="hr" class="" href="https://europa.eu/youreurope/citizens/index_hr.htm"
-							lang="hr">hrvatski</a>
+						<a title="hrvatski" hreflang="hr" class=""
+							href="https://europa.eu/youreurope/citizens/index_hr.htm" lang="hr">hrvatski</a>
 					</li>
 					<li>
-						<a title="italiano" hreflang="it" class="" href="https://europa.eu/youreurope/citizens/index_it.htm"
-							lang="it">italiano</a>
+						<a title="italiano" hreflang="it" class=""
+							href="https://europa.eu/youreurope/citizens/index_it.htm" lang="it">italiano</a>
 					</li>
 					<li>
-						<a title="Latviešu" hreflang="lv" class="" href="https://europa.eu/youreurope/citizens/index_lv.htm"
-							lang="lv">Latviešu</a>
+						<a title="Latviešu" hreflang="lv" class=""
+							href="https://europa.eu/youreurope/citizens/index_lv.htm" lang="lv">Latviešu</a>
 					</li>
 				</ul>
 				<ul>
 					<li>
-						<a title="Lietuvių" hreflang="lt" class="" href="https://europa.eu/youreurope/citizens/index_lt.htm"
-							lang="lt">Lietuvių</a>
+						<a title="Lietuvių" hreflang="lt" class=""
+							href="https://europa.eu/youreurope/citizens/index_lt.htm" lang="lt">Lietuvių</a>
 					</li>
 					<li>
-						<a title="magyar" hreflang="hu" class="" href="https://europa.eu/youreurope/citizens/index_hu.htm"
-							lang="hu">magyar</a>
+						<a title="magyar" hreflang="hu" class=""
+							href="https://europa.eu/youreurope/citizens/index_hu.htm" lang="hu">magyar</a>
 					</li>
 					<li>
-						<a title="Malti" hreflang="mt" class="" href="https://europa.eu/youreurope/citizens/index_mt.htm"
-							lang="mt">Malti</a>
+						<a title="Malti" hreflang="mt" class=""
+							href="https://europa.eu/youreurope/citizens/index_mt.htm" lang="mt">Malti</a>
 					</li>
 					<li>
-						<a title="Nederlands" hreflang="nl" class="" href="https://europa.eu/youreurope/citizens/index_nl.htm"
-							lang="nl">Nederlands</a>
+						<a title="Nederlands" hreflang="nl" class=""
+							href="https://europa.eu/youreurope/citizens/index_nl.htm" lang="nl">Nederlands</a>
 					</li>
 					<li>
-						<a title="polski" hreflang="pl" class="" href="https://europa.eu/youreurope/citizens/index_pl.htm"
-							lang="pl">polski</a>
+						<a title="polski" hreflang="pl" class=""
+							href="https://europa.eu/youreurope/citizens/index_pl.htm" lang="pl">polski</a>
 					</li>
 					<li>
-						<a title="português" hreflang="pt" class="" href="https://europa.eu/youreurope/citizens/index_pt.htm"
-							lang="pt">português</a>
+						<a title="português" hreflang="pt" class=""
+							href="https://europa.eu/youreurope/citizens/index_pt.htm" lang="pt">português</a>
 					</li>
 					<li>
-						<a title="română" hreflang="ro" class="" href="https://europa.eu/youreurope/citizens/index_ro.htm"
-							lang="ro">română</a>
+						<a title="română" hreflang="ro" class=""
+							href="https://europa.eu/youreurope/citizens/index_ro.htm" lang="ro">română</a>
 					</li>
 					<li>
-						<a title="Slovenčina" hreflang="sk" class="" href="https://europa.eu/youreurope/citizens/index_sk.htm"
-							lang="sk">Slovenčina</a>
+						<a title="Slovenčina" hreflang="sk" class=""
+							href="https://europa.eu/youreurope/citizens/index_sk.htm" lang="sk">Slovenčina</a>
 					</li>
 					<li>
-						<a title="Slovenščina" hreflang="sl" class="" href="https://europa.eu/youreurope/citizens/index_sl.htm"
-							lang="sl">Slovenščina</a>
+						<a title="Slovenščina" hreflang="sl" class=""
+							href="https://europa.eu/youreurope/citizens/index_sl.htm" lang="sl">Slovenščina</a>
 					</li>
 					<li>
-						<a title="suomi" hreflang="fi" class="" href="https://europa.eu/youreurope/citizens/index_fi.htm"
-							lang="fi">suomi</a>
+						<a title="suomi" hreflang="fi" class=""
+							href="https://europa.eu/youreurope/citizens/index_fi.htm" lang="fi">suomi</a>
 					</li>
 					<li>
-						<a title="svenska" hreflang="sv" class="" href="https://europa.eu/youreurope/citizens/index_sv.htm"
-							lang="sv">svenska</a>
+						<a title="svenska" hreflang="sv" class=""
+							href="https://europa.eu/youreurope/citizens/index_sv.htm" lang="sv">svenska</a>
 					</li>
 				</ul>
 				<div class="clear"></div>
 			</div>
 			<form method="get" action="https://europa.eu/search" id="eu-ye-search-tool">
 				<div>
-					<label for="eu-search-terms">Search terms</label><input name="QueryText" id="eu-search-terms" type="text"
-						title="Search Text"><input value="en" name="swlang" type="hidden" id="swlang"><input value="YEC"
-						name="query_source" type="hidden" id="query_source"><input type="submit" value="Search">
+					<label for="eu-search-terms">Search terms</label><input name="QueryText" id="eu-search-terms"
+						type="text" title="Search Text"><input value="en" name="swlang" type="hidden" id="swlang"><input
+						value="YEC" name="query_source" type="hidden" id="query_source"><input type="submit"
+						value="Search">
 				</div>
 			</form>
 		</section>
@@ -253,12 +341,14 @@
 				<a class="menu" href="https://europa.eu/youreurope/citizens/index_en.htm" title="Home">Home</a>
 			</li>
 			<li class="section-menu">
-				<a href="https://europa.eu/youreurope/citizens/travel/index_en.htm" title="Travel" class="menu group">Travel</a>
+				<a href="https://europa.eu/youreurope/citizens/travel/index_en.htm" title="Travel"
+					class="menu group">Travel</a>
 				<ul id="menu-group-1">
 					<li class="extra ">
 						<a title="Documents you need for travel in Europe"
 							href="https://europa.eu/youreurope/citizens/travel/entry-exit/index_en.htm" class="submenu"
-							id="extra-btn-1" onclick="displaySubGroup(1, event);">Documents you need for travel in Europe</a>
+							id="extra-btn-1" onclick="displaySubGroup(1, event);">Documents you need for travel in
+							Europe</a>
 						<ul id="extra-menu-1">
 							<li class="">
 								<a title="Travel documents for EU nationals"
@@ -289,17 +379,19 @@
 					</li>
 					<li class="extra ">
 						<a title="Passenger rights"
-							href="https://europa.eu/youreurope/citizens/travel/passenger-rights/index_en.htm" class="submenu"
-							id="extra-btn-2" onclick="displaySubGroup(2, event);">Passenger rights</a>
+							href="https://europa.eu/youreurope/citizens/travel/passenger-rights/index_en.htm"
+							class="submenu" id="extra-btn-2" onclick="displaySubGroup(2, event);">Passenger rights</a>
 						<ul id="extra-menu-2">
 							<li class="">
 								<a title="Air passenger rights"
-									href="https://europa.eu/youreurope/citizens/travel/passenger-rights/air/index_en.htm">Air passenger
+									href="https://europa.eu/youreurope/citizens/travel/passenger-rights/air/index_en.htm">Air
+									passenger
 									rights</a>
 							</li>
 							<li class="">
 								<a title="Rail passenger rights"
-									href="https://europa.eu/youreurope/citizens/travel/passenger-rights/rail/index_en.htm">Rail passenger
+									href="https://europa.eu/youreurope/citizens/travel/passenger-rights/rail/index_en.htm">Rail
+									passenger
 									rights</a>
 							</li>
 							<li class="">
@@ -309,15 +401,17 @@
 							</li>
 							<li class="">
 								<a title="Ship passenger rights"
-									href="https://europa.eu/youreurope/citizens/travel/passenger-rights/ship/index_en.htm">Ship passenger
+									href="https://europa.eu/youreurope/citizens/travel/passenger-rights/ship/index_en.htm">Ship
+									passenger
 									rights</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
 						<a title="Transport and disability"
-							href="https://europa.eu/youreurope/citizens/travel/transport-disability/index_en.htm" class="submenu"
-							id="extra-btn-3" onclick="displaySubGroup(3, event);">Transport and disability</a>
+							href="https://europa.eu/youreurope/citizens/travel/transport-disability/index_en.htm"
+							class="submenu" id="extra-btn-3" onclick="displaySubGroup(3, event);">Transport and
+							disability</a>
 						<ul id="extra-menu-3">
 							<li class="">
 								<a title="Rights for travellers with reduced mobility"
@@ -332,7 +426,8 @@
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Driving abroad" href="https://europa.eu/youreurope/citizens/travel/driving-abroad/index_en.htm"
+						<a title="Driving abroad"
+							href="https://europa.eu/youreurope/citizens/travel/driving-abroad/index_en.htm"
 							class="submenu" id="extra-btn-4" onclick="displaySubGroup(4, event);">Driving abroad</a>
 						<ul id="extra-menu-4">
 							<li class="">
@@ -354,17 +449,19 @@
 					</li>
 					<li class="extra ">
 						<a title="What can you take with you?"
-							href="https://europa.eu/youreurope/citizens/travel/carry/index_en.htm" class="submenu" id="extra-btn-5"
-							onclick="displaySubGroup(5, event);">What can you take with you?</a>
+							href="https://europa.eu/youreurope/citizens/travel/carry/index_en.htm" class="submenu"
+							id="extra-btn-5" onclick="displaySubGroup(5, event);">What can you take with you?</a>
 						<ul id="extra-menu-5">
 							<li class="">
 								<a title="Taking animals or plants with you"
-									href="https://europa.eu/youreurope/citizens/travel/carry/animal-plant/index_en.htm">Taking animals or
+									href="https://europa.eu/youreurope/citizens/travel/carry/animal-plant/index_en.htm">Taking
+									animals or
 									plants with you</a>
 							</li>
 							<li class="">
 								<a title="Taking animal products with you"
-									href="https://europa.eu/youreurope/citizens/travel/carry/meat-dairy-animal/index_en.htm">Taking animal
+									href="https://europa.eu/youreurope/citizens/travel/carry/meat-dairy-animal/index_en.htm">Taking
+									animal
 									products with you</a>
 							</li>
 							<li class="">
@@ -379,14 +476,16 @@
 							</li>
 							<li class="">
 								<a title="Using the euro"
-									href="https://europa.eu/youreurope/citizens/travel/carry/using-euro/index_en.htm">Using the euro</a>
+									href="https://europa.eu/youreurope/citizens/travel/carry/using-euro/index_en.htm">Using
+									the euro</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
 						<a title="Security and emergencies"
-							href="https://europa.eu/youreurope/citizens/travel/security-and-emergencies/index_en.htm" class="submenu"
-							id="extra-btn-6" onclick="displaySubGroup(6, event);">Security and emergencies</a>
+							href="./Security and emergencies - Your Europe.php"
+							class="submenu" id="extra-btn-6" onclick="displaySubGroup(6, event);">Security and
+							emergencies</a>
 						<ul id="extra-menu-6">
 							<li class="">
 								<a title="Airport and airline security"
@@ -406,8 +505,8 @@
 					</li>
 					<li class="extra ">
 						<a title="Package travel and timeshare"
-							href="https://europa.eu/youreurope/citizens/travel/holidays/index_en.htm" class="submenu" id="extra-btn-7"
-							onclick="displaySubGroup(7, event);">Package travel and timeshare</a>
+							href="https://europa.eu/youreurope/citizens/travel/holidays/index_en.htm" class="submenu"
+							id="extra-btn-7" onclick="displaySubGroup(7, event);">Package travel and timeshare</a>
 						<ul id="extra-menu-7">
 							<li class="">
 								<a title="Package travel and linked travel arrangements"
@@ -416,7 +515,8 @@
 							</li>
 							<li class="">
 								<a title="Timeshare and other long-term holiday contracts in the EU"
-									href="https://europa.eu/youreurope/citizens/travel/holidays/timeshare/index_en.htm">Timeshare and
+									href="https://europa.eu/youreurope/citizens/travel/holidays/timeshare/index_en.htm">Timeshare
+									and
 									other long-term holiday contracts in the EU</a>
 							</li>
 						</ul>
@@ -428,8 +528,9 @@
 					class="menu group">Work &amp; Retirement</a>
 				<ul id="menu-group-2">
 					<li class="extra ">
-						<a title="Working abroad" href="https://europa.eu/youreurope/citizens/work/work-abroad/index_en.htm"
-							class="submenu" id="extra-btn-8" onclick="displaySubGroup(8, event);">Working abroad</a>
+						<a title="Working abroad"
+							href="https://europa.eu/youreurope/citizens/work/work-abroad/index_en.htm" class="submenu"
+							id="extra-btn-8" onclick="displaySubGroup(8, event);">Working abroad</a>
 						<ul id="extra-menu-8">
 							<li class="">
 								<a title="Equal treatment"
@@ -460,8 +561,9 @@
 					</li>
 					<li class="extra ">
 						<a title="Finding a job abroad"
-							href="https://europa.eu/youreurope/citizens/work/finding-job-abroad/index_en.htm" class="submenu"
-							id="extra-btn-9" onclick="displaySubGroup(9, event);">Finding a job abroad</a>
+							href="https://europa.eu/youreurope/citizens/work/finding-job-abroad/index_en.htm"
+							class="submenu" id="extra-btn-9" onclick="displaySubGroup(9, event);">Finding a job
+							abroad</a>
 						<ul id="extra-menu-9">
 							<li class="">
 								<a title="Transferring unemployment benefits"
@@ -482,8 +584,9 @@
 					</li>
 					<li class="extra ">
 						<a title="Professional qualifications"
-							href="https://europa.eu/youreurope/citizens/work/professional-qualifications/index_en.htm" class="submenu"
-							id="extra-btn-10" onclick="displaySubGroup(10, event);">Professional qualifications</a>
+							href="https://europa.eu/youreurope/citizens/work/professional-qualifications/index_en.htm"
+							class="submenu" id="extra-btn-10" onclick="displaySubGroup(10, event);">Professional
+							qualifications</a>
 						<ul id="extra-menu-10">
 							<li class="">
 								<a title="What is a regulated profession"
@@ -514,8 +617,9 @@
 					</li>
 					<li class="extra ">
 						<a title="Unemployment &amp; benefits"
-							href="https://europa.eu/youreurope/citizens/work/unemployment-and-benefits/index_en.htm" class="submenu"
-							id="extra-btn-11" onclick="displaySubGroup(11, event);">Unemployment &amp; benefits</a>
+							href="https://europa.eu/youreurope/citizens/work/unemployment-and-benefits/index_en.htm"
+							class="submenu" id="extra-btn-11" onclick="displaySubGroup(11, event);">Unemployment &amp;
+							benefits</a>
 						<ul id="extra-menu-11">
 							<li class="">
 								<a title="Social security systems in the EU"
@@ -539,14 +643,16 @@
 							</li>
 							<li class="">
 								<a title="Useful forms for social security rights"
-									href="https://europa.eu/youreurope/citizens/work/social-security-forms/index_en.htm">Useful forms for
+									href="https://europa.eu/youreurope/citizens/work/social-security-forms/index_en.htm">Useful
+									forms for
 									social security rights</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Retiring abroad" href="https://europa.eu/youreurope/citizens/work/retire-abroad/index_en.htm"
-							class="submenu" id="extra-btn-12" onclick="displaySubGroup(12, event);">Retiring abroad</a>
+						<a title="Retiring abroad"
+							href="https://europa.eu/youreurope/citizens/work/retire-abroad/index_en.htm" class="submenu"
+							id="extra-btn-12" onclick="displaySubGroup(12, event);">Retiring abroad</a>
 						<ul id="extra-menu-12">
 							<li class="">
 								<a title="State pensions abroad"
@@ -561,12 +667,13 @@
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Taxes" href="https://europa.eu/youreurope/citizens/work/taxes/index_en.htm" class="submenu"
-							id="extra-btn-13" onclick="displaySubGroup(13, event);">Taxes</a>
+						<a title="Taxes" href="https://europa.eu/youreurope/citizens/work/taxes/index_en.htm"
+							class="submenu" id="extra-btn-13" onclick="displaySubGroup(13, event);">Taxes</a>
 						<ul id="extra-menu-13">
 							<li class="">
 								<a title="Income taxes abroad"
-									href="https://europa.eu/youreurope/citizens/work/taxes/income-taxes-abroad/index_en.htm">Income taxes
+									href="https://europa.eu/youreurope/citizens/work/taxes/income-taxes-abroad/index_en.htm">Income
+									taxes
 									abroad</a>
 							</li>
 							<li class="">
@@ -583,12 +690,13 @@
 					class="menu group">Vehicles</a>
 				<ul id="menu-group-3">
 					<li class="extra ">
-						<a title="Cars" href="https://europa.eu/youreurope/citizens/vehicles/cars/index_en.htm" class="submenu"
-							id="extra-btn-14" onclick="displaySubGroup(14, event);">Cars</a>
+						<a title="Cars" href="https://europa.eu/youreurope/citizens/vehicles/cars/index_en.htm"
+							class="submenu" id="extra-btn-14" onclick="displaySubGroup(14, event);">Cars</a>
 						<ul id="extra-menu-14">
 							<li class="">
 								<a title="Buying and leasing a car"
-									href="https://europa.eu/youreurope/citizens/vehicles/cars/buying-a-car-abroad/index_en.htm">Buying and
+									href="https://europa.eu/youreurope/citizens/vehicles/cars/buying-a-car-abroad/index_en.htm">Buying
+									and
 									leasing a car</a>
 							</li>
 							<li class="">
@@ -598,14 +706,15 @@
 							</li>
 							<li class="">
 								<a title="Company cars"
-									href="https://europa.eu/youreurope/citizens/vehicles/cars/company-cars/index_en.htm">Company cars</a>
+									href="https://europa.eu/youreurope/citizens/vehicles/cars/company-cars/index_en.htm">Company
+									cars</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
 						<a title="Driving licence"
-							href="https://europa.eu/youreurope/citizens/vehicles/driving-licence/index_en.htm" class="submenu"
-							id="extra-btn-15" onclick="displaySubGroup(15, event);">Driving licence</a>
+							href="https://europa.eu/youreurope/citizens/vehicles/driving-licence/index_en.htm"
+							class="submenu" id="extra-btn-15" onclick="displaySubGroup(15, event);">Driving licence</a>
 						<ul id="extra-menu-15">
 							<li class="">
 								<a title="Getting a driving licence in the EU"
@@ -625,23 +734,27 @@
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Insurance" href="https://europa.eu/youreurope/citizens/vehicles/insurance/index_en.htm"
-							class="submenu" id="extra-btn-16" onclick="displaySubGroup(16, event);">Insurance</a>
+						<a title="Insurance"
+							href="https://europa.eu/youreurope/citizens/vehicles/insurance/index_en.htm" class="submenu"
+							id="extra-btn-16" onclick="displaySubGroup(16, event);">Insurance</a>
 						<ul id="extra-menu-16">
 							<li class="">
 								<a title="Car insurance validity in the EU"
-									href="https://europa.eu/youreurope/citizens/vehicles/insurance/validity/index_en.htm">Car insurance
+									href="https://europa.eu/youreurope/citizens/vehicles/insurance/validity/index_en.htm">Car
+									insurance
 									validity in the EU</a>
 							</li>
 							<li class="">
 								<a title="Car insurance cover abroad"
-									href="https://europa.eu/youreurope/citizens/vehicles/insurance/accident/index_en.htm">Car insurance
+									href="https://europa.eu/youreurope/citizens/vehicles/insurance/accident/index_en.htm">Car
+									insurance
 									cover abroad</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Registration" href="https://europa.eu/youreurope/citizens/vehicles/registration/index_en.htm"
+						<a title="Registration"
+							href="https://europa.eu/youreurope/citizens/vehicles/registration/index_en.htm"
 							class="submenu" id="extra-btn-17" onclick="displaySubGroup(17, event);">Registration</a>
 						<ul id="extra-menu-17">
 							<li class="">
@@ -656,7 +769,8 @@
 							</li>
 							<li class="">
 								<a title="Car taxes in another EU country"
-									href="https://europa.eu/youreurope/citizens/vehicles/registration/taxes-abroad/index_en.htm">Car taxes
+									href="https://europa.eu/youreurope/citizens/vehicles/registration/taxes-abroad/index_en.htm">Car
+									taxes
 									in another EU country</a>
 							</li>
 						</ul>
@@ -669,12 +783,13 @@
 				<ul id="menu-group-4">
 					<li class="extra ">
 						<a title="Residence rights"
-							href="https://europa.eu/youreurope/citizens/residence/residence-rights/index_en.htm" class="submenu"
-							id="extra-btn-18" onclick="displaySubGroup(18, event);">Residence rights</a>
+							href="https://europa.eu/youreurope/citizens/residence/residence-rights/index_en.htm"
+							class="submenu" id="extra-btn-18" onclick="displaySubGroup(18, event);">Residence rights</a>
 						<ul id="extra-menu-18">
 							<li class="">
 								<a title="Workers - residence rights"
-									href="https://europa.eu/youreurope/citizens/residence/residence-rights/workers/index_en.htm">Workers -
+									href="https://europa.eu/youreurope/citizens/residence/residence-rights/workers/index_en.htm">Workers
+									-
 									residence rights</a>
 							</li>
 							<li class="">
@@ -697,7 +812,8 @@
 					<li class="extra ">
 						<a title="Family residence rights"
 							href="https://europa.eu/youreurope/citizens/residence/family-residence-rights/index_en.htm"
-							class="submenu" id="extra-btn-19" onclick="displaySubGroup(19, event);">Family residence rights</a>
+							class="submenu" id="extra-btn-19" onclick="displaySubGroup(19, event);">Family residence
+							rights</a>
 						<ul id="extra-menu-19">
 							<li class="">
 								<a title="Your EU spouse and children"
@@ -733,8 +849,9 @@
 					</li>
 					<li class="extra ">
 						<a title="Documents and formalities"
-							href="https://europa.eu/youreurope/citizens/residence/documents-formalities/index_en.htm" class="submenu"
-							id="extra-btn-20" onclick="displaySubGroup(20, event);">Documents and formalities</a>
+							href="https://europa.eu/youreurope/citizens/residence/documents-formalities/index_en.htm"
+							class="submenu" id="extra-btn-20" onclick="displaySubGroup(20, event);">Documents and
+							formalities</a>
 						<ul id="extra-menu-20">
 							<li class="">
 								<a title="Reporting presence for short stays (&lt;3 months)"
@@ -770,8 +887,8 @@
 					</li>
 					<li class="extra ">
 						<a title="Elections abroad"
-							href="https://europa.eu/youreurope/citizens/residence/elections-abroad/index_en.htm" class="submenu"
-							id="extra-btn-21" onclick="displaySubGroup(21, event);">Elections abroad</a>
+							href="https://europa.eu/youreurope/citizens/residence/elections-abroad/index_en.htm"
+							class="submenu" id="extra-btn-21" onclick="displaySubGroup(21, event);">Elections abroad</a>
 						<ul id="extra-menu-21">
 							<li class="">
 								<a title="Municipal elections"
@@ -797,23 +914,26 @@
 					class="menu group">Education &amp; Youth</a>
 				<ul id="menu-group-5">
 					<li class="extra ">
-						<a title="School" href="https://europa.eu/youreurope/citizens/education/school/index_en.htm" class="submenu"
-							id="extra-btn-22" onclick="displaySubGroup(22, event);">School</a>
+						<a title="School" href="https://europa.eu/youreurope/citizens/education/school/index_en.htm"
+							class="submenu" id="extra-btn-22" onclick="displaySubGroup(22, event);">School</a>
 						<ul id="extra-menu-22">
 							<li class="">
 								<a title="Starting school in another EU country"
-									href="https://europa.eu/youreurope/citizens/education/school/enrol/index_en.htm">Starting school in
+									href="https://europa.eu/youreurope/citizens/education/school/enrol/index_en.htm">Starting
+									school in
 									another EU country</a>
 							</li>
 							<li class="">
 								<a title="Partnering with schools abroad"
-									href="https://europa.eu/youreurope/citizens/education/school/partner/index_en.htm">Partnering with
+									href="https://europa.eu/youreurope/citizens/education/school/partner/index_en.htm">Partnering
+									with
 									schools abroad</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="University" href="https://europa.eu/youreurope/citizens/education/university/index_en.htm"
+						<a title="University"
+							href="https://europa.eu/youreurope/citizens/education/university/index_en.htm"
 							class="submenu" id="extra-btn-23" onclick="displaySubGroup(23, event);">University</a>
 						<ul id="extra-menu-23">
 							<li class="">
@@ -844,7 +964,8 @@
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Traineeships" href="https://europa.eu/youreurope/citizens/education/traineeships/index_en.htm"
+						<a title="Traineeships"
+							href="https://europa.eu/youreurope/citizens/education/traineeships/index_en.htm"
 							class="submenu" id="extra-btn-24" onclick="displaySubGroup(24, event);">Traineeships</a>
 						<ul id="extra-menu-24">
 							<li class="">
@@ -855,28 +976,33 @@
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Researchers" href="https://europa.eu/youreurope/citizens/education/research/index_en.htm"
-							class="submenu" id="extra-btn-25" onclick="displaySubGroup(25, event);">Researchers</a>
+						<a title="Researchers"
+							href="https://europa.eu/youreurope/citizens/education/research/index_en.htm" class="submenu"
+							id="extra-btn-25" onclick="displaySubGroup(25, event);">Researchers</a>
 						<ul id="extra-menu-25">
 							<li class="">
 								<a title="Grants and jobs for researchers"
-									href="https://europa.eu/youreurope/citizens/education/research/jobs/index_en.htm">Grants and jobs for
+									href="https://europa.eu/youreurope/citizens/education/research/jobs/index_en.htm">Grants
+									and jobs for
 									researchers</a>
 							</li>
 							<li class="">
 								<a title="Taxation of researchers"
-									href="https://europa.eu/youreurope/citizens/education/research/tax/index_en.htm">Taxation of
+									href="https://europa.eu/youreurope/citizens/education/research/tax/index_en.htm">Taxation
+									of
 									researchers</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Volunteering" href="https://europa.eu/youreurope/citizens/education/volunteering/index_en.htm"
+						<a title="Volunteering"
+							href="https://europa.eu/youreurope/citizens/education/volunteering/index_en.htm"
 							class="submenu" id="extra-btn-26" onclick="displaySubGroup(26, event);">Volunteering</a>
 						<ul id="extra-menu-26">
 							<li class="">
 								<a title="Finding a volunteering project"
-									href="https://europa.eu/youreurope/citizens/education/volunteering/find/index_en.htm">Finding a
+									href="https://europa.eu/youreurope/citizens/education/volunteering/find/index_en.htm">Finding
+									a
 									volunteering project</a>
 							</li>
 							<li class="">
@@ -889,12 +1015,14 @@
 				</ul>
 			</li>
 			<li class="section-menu">
-				<a href="https://europa.eu/youreurope/citizens/health/index_en.htm" title="Health" class="menu group">Health</a>
+				<a href="https://europa.eu/youreurope/citizens/health/index_en.htm" title="Health"
+					class="menu group">Health</a>
 				<ul id="menu-group-6">
 					<li class="extra ">
 						<a title="Unplanned healthcare"
-							href="https://europa.eu/youreurope/citizens/health/unplanned-healthcare/index_en.htm" class="submenu"
-							id="extra-btn-27" onclick="displaySubGroup(27, event);">Unplanned healthcare</a>
+							href="https://europa.eu/youreurope/citizens/health/unplanned-healthcare/index_en.htm"
+							class="submenu" id="extra-btn-27" onclick="displaySubGroup(27, event);">Unplanned
+							healthcare</a>
 						<ul id="extra-menu-27">
 							<li class="">
 								<a title="Health cover for temporary stays"
@@ -915,8 +1043,9 @@
 					</li>
 					<li class="extra ">
 						<a title="Planned medical treatment abroad"
-							href="https://europa.eu/youreurope/citizens/health/planned-healthcare/index_en.htm" class="submenu"
-							id="extra-btn-28" onclick="displaySubGroup(28, event);">Planned medical treatment abroad</a>
+							href="https://europa.eu/youreurope/citizens/health/planned-healthcare/index_en.htm"
+							class="submenu" id="extra-btn-28" onclick="displaySubGroup(28, event);">Planned medical
+							treatment abroad</a>
 						<ul id="extra-menu-28">
 							<li class="">
 								<a title="Organising planned medical treatment abroad"
@@ -938,7 +1067,8 @@
 					<li class="extra ">
 						<a title="Getting prescription medicine abroad"
 							href="https://europa.eu/youreurope/citizens/health/prescription-medicine-abroad/index_en.htm"
-							class="submenu" id="extra-btn-29" onclick="displaySubGroup(29, event);">Getting prescription medicine
+							class="submenu" id="extra-btn-29" onclick="displaySubGroup(29, event);">Getting prescription
+							medicine
 							abroad</a>
 						<ul id="extra-menu-29">
 							<li class="">
@@ -955,8 +1085,9 @@
 					</li>
 					<li class="extra ">
 						<a title="When living abroad"
-							href="https://europa.eu/youreurope/citizens/health/when-living-abroad/index_en.htm" class="submenu"
-							id="extra-btn-30" onclick="displaySubGroup(30, event);">When living abroad</a>
+							href="https://europa.eu/youreurope/citizens/health/when-living-abroad/index_en.htm"
+							class="submenu" id="extra-btn-30" onclick="displaySubGroup(30, event);">When living
+							abroad</a>
 						<ul id="extra-menu-30">
 							<li class="">
 								<a title="Your health insurance cover"
@@ -968,7 +1099,8 @@
 				</ul>
 			</li>
 			<li class="section-menu">
-				<a href="https://europa.eu/youreurope/citizens/family/index_en.htm" title="Family" class="menu group">Family</a>
+				<a href="https://europa.eu/youreurope/citizens/family/index_en.htm" title="Family"
+					class="menu group">Family</a>
 				<ul id="menu-group-7">
 					<li class="extra ">
 						<a title="Children" href="https://europa.eu/youreurope/citizens/family/children/index_en.htm"
@@ -990,13 +1122,14 @@
 							</li>
 							<li class="">
 								<a title="Family benefits"
-									href="https://europa.eu/youreurope/citizens/family/children/benefits/index_en.htm">Family benefits</a>
+									href="https://europa.eu/youreurope/citizens/family/children/benefits/index_en.htm">Family
+									benefits</a>
 							</li>
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Couples" href="https://europa.eu/youreurope/citizens/family/couple/index_en.htm" class="submenu"
-							id="extra-btn-32" onclick="displaySubGroup(32, event);">Couples</a>
+						<a title="Couples" href="https://europa.eu/youreurope/citizens/family/couple/index_en.htm"
+							class="submenu" id="extra-btn-32" onclick="displaySubGroup(32, event);">Couples</a>
 						<ul id="extra-menu-32">
 							<li class="">
 								<a title="Marriage"
@@ -1014,7 +1147,8 @@
 							</li>
 							<li class="">
 								<a title="Divorce and legal separation"
-									href="https://europa.eu/youreurope/citizens/family/couple/divorce-separation/index_en.htm">Divorce and
+									href="https://europa.eu/youreurope/citizens/family/couple/divorce-separation/index_en.htm">Divorce
+									and
 									legal separation</a>
 							</li>
 							<li class="">
@@ -1036,8 +1170,9 @@
 					</li>
 					<li class="extra ">
 						<a title="Cross-border inheritance"
-							href="https://europa.eu/youreurope/citizens/family/inheritances/index_en.htm" class="submenu"
-							id="extra-btn-33" onclick="displaySubGroup(33, event);">Cross-border inheritance</a>
+							href="https://europa.eu/youreurope/citizens/family/inheritances/index_en.htm"
+							class="submenu" id="extra-btn-33" onclick="displaySubGroup(33, event);">Cross-border
+							inheritance</a>
 						<ul id="extra-menu-33">
 							<li class="">
 								<a title="Planning your cross-border inheritance"
@@ -1073,7 +1208,8 @@
 							</li>
 							<li class="">
 								<a title="VAT – Value Added Tax"
-									href="https://europa.eu/youreurope/citizens/consumers/shopping/vat/index_en.htm">VAT – Value Added
+									href="https://europa.eu/youreurope/citizens/consumers/shopping/vat/index_en.htm">VAT
+									– Value Added
 									Tax</a>
 							</li>
 							<li class="">
@@ -1090,8 +1226,9 @@
 					</li>
 					<li class="extra ">
 						<a title="Internet and telecoms"
-							href="https://europa.eu/youreurope/citizens/consumers/internet-telecoms/index_en.htm" class="submenu"
-							id="extra-btn-35" onclick="displaySubGroup(35, event);">Internet and telecoms</a>
+							href="https://europa.eu/youreurope/citizens/consumers/internet-telecoms/index_en.htm"
+							class="submenu" id="extra-btn-35" onclick="displaySubGroup(35, event);">Internet and
+							telecoms</a>
 						<ul id="extra-menu-35">
 							<li class="">
 								<a title="Roaming in the EU"
@@ -1123,7 +1260,8 @@
 					<li class="extra ">
 						<a title="Financial products and services"
 							href="https://europa.eu/youreurope/citizens/consumers/financial-products-and-services/index_en.htm"
-							class="submenu" id="extra-btn-36" onclick="displaySubGroup(36, event);">Financial products and
+							class="submenu" id="extra-btn-36" onclick="displaySubGroup(36, event);">Financial products
+							and
 							services</a>
 						<ul id="extra-menu-36">
 							<li class="">
@@ -1160,8 +1298,8 @@
 					</li>
 					<li class="extra ">
 						<a title="Unfair treatment"
-							href="https://europa.eu/youreurope/citizens/consumers/unfair-treatment/index_en.htm" class="submenu"
-							id="extra-btn-37" onclick="displaySubGroup(37, event);">Unfair treatment</a>
+							href="https://europa.eu/youreurope/citizens/consumers/unfair-treatment/index_en.htm"
+							class="submenu" id="extra-btn-37" onclick="displaySubGroup(37, event);">Unfair treatment</a>
 						<ul id="extra-menu-37">
 							<li class="">
 								<a title="Unfair commercial practices"
@@ -1181,7 +1319,8 @@
 						</ul>
 					</li>
 					<li class="extra ">
-						<a title="Energy supply" href="https://europa.eu/youreurope/citizens/consumers/energy-supply/index_en.htm"
+						<a title="Energy supply"
+							href="https://europa.eu/youreurope/citizens/consumers/energy-supply/index_en.htm"
 							class="submenu" id="extra-btn-38" onclick="displaySubGroup(38, event);">Energy supply</a>
 						<ul id="extra-menu-38">
 							<li class="">
@@ -1204,7 +1343,8 @@
 					<li class="extra ">
 						<a title="Consumer dispute resolution"
 							href="https://europa.eu/youreurope/citizens/consumers/consumers-dispute-resolution/index_en.htm"
-							class="submenu" id="extra-btn-39" onclick="displaySubGroup(39, event);">Consumer dispute resolution</a>
+							class="submenu" id="extra-btn-39" onclick="displaySubGroup(39, event);">Consumer dispute
+							resolution</a>
 						<ul id="extra-menu-39">
 							<li class="">
 								<a title="Informal dispute resolution for consumers"
@@ -1233,17 +1373,19 @@
 		<section id="feedback-bar">
 			<div class="centered">
 				<button id="feedback">Help us improve</button>
-				<form action="https://europa.eu/youreurope/citizens/index_en.htm" name="fm" method="post" class="standard-form"
-					id="feedback-form">
-					<input id="section" name="section" type="hidden" value=""><input value="" id="ip" name="ip" type="hidden">
+				<form action="https://europa.eu/youreurope/citizens/index_en.htm" name="fm" method="post"
+					class="standard-form" id="feedback-form">
+					<input id="section" name="section" type="hidden" value=""><input value="" id="ip" name="ip"
+						type="hidden">
 					<p class="status">Thank you for taking part in our survey!</p>
-					<label class="mandatory block">Find what you wanted?</label><label class="radio">Yes<input value="yes"
-							id="found-yes" name="found-topic" type="radio"><span class="radio-mark"></span></label><label
-						class="radio">No<input value="no" id="found-no" name="found-topic" type="radio"><span
-							class="radio-mark"></span></label><label class="mandatory block" for="looking-topic">What were you looking
+					<label class="mandatory block">Find what you wanted?</label><label class="radio">Yes<input
+							value="yes" id="found-yes" name="found-topic" type="radio"><span
+							class="radio-mark"></span></label><label class="radio">No<input value="no" id="found-no"
+							name="found-topic" type="radio"><span class="radio-mark"></span></label><label
+						class="mandatory block" for="looking-topic">What were you looking
 						for?</label><input name="looking-topic" id="looking-topic" type="text"><label class="block"
-						for="suggestions">Any suggestions?</label><textarea rows="8" cols="60" id="suggestions"></textarea><input
-						type="submit" value="Send">
+						for="suggestions">Any suggestions?</label><textarea rows="8" cols="60"
+						id="suggestions"></textarea><input type="submit" value="Send">
 					<p class="mandatory">mandatory field</p>
 				</form>
 			</div>
@@ -1256,9 +1398,10 @@
 				<div id="ye-follow-links">
 					Follow us on
 					:
-					<a id="ye-follow-facebook" target="_blank" href="https://www.facebook.com/YourEuropePortal">Facebook</a><a
-						id="ye-follow-twitter" target="_blank" href="https://twitter.com/YourEuropeEu">twitter</a><a
-						id="ye-follow-linkedin" target="_blank"
+					<a id="ye-follow-facebook" target="_blank"
+						href="https://www.facebook.com/YourEuropePortal">Facebook</a><a id="ye-follow-twitter"
+						target="_blank" href="https://twitter.com/YourEuropeEu">twitter</a><a id="ye-follow-linkedin"
+						target="_blank"
 						href="https://www.linkedin.com/showcase/your-europe-business-showcase/">LinkedIn</a>
 				</div>
 				<ul id="ye-general-pages">
@@ -1285,31 +1428,37 @@
 					<a name="eu_institutions"></a>
 					<ul>
 						<li>
-							<a target="_blank" href="https://europa.eu/european-union/contact/call-us_en">Call 00 800 6 7 8 9 10 11.
+							<a target="_blank" href="https://europa.eu/european-union/contact/call-us_en">Call 00 800 6
+								7 8 9 10 11.
 								See details of service</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://europa.eu/european-union/contact/write-to-us_en">Email your questions
+							<a target="_blank" href="https://europa.eu/european-union/contact/write-to-us_en">Email your
+								questions
 								about the EU</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://europa.eu/european-union/contact_en#row_4">EU in your country</a>
+							<a target="_blank" href="https://europa.eu/european-union/contact_en#row_4">EU in your
+								country</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://europa.eu/european-union/contact/meet-us_en">Local information services
+							<a target="_blank" href="https://europa.eu/european-union/contact/meet-us_en">Local
+								information services
 								in the EU</a>
 						</li>
 					</ul>
 					<ul>
 						<li>
-							<a target="_blank" href="https://europa.eu/european-union/contact/institutions-bodies_en">Institutions,
+							<a target="_blank"
+								href="https://europa.eu/european-union/contact/institutions-bodies_en">Institutions,
 								bodies and agencies</a>
 						</li>
 						<li>
 							<a target="_blank" href="https://europa.eu/newsroom/press-contacts_en">Press contacts</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://europa.eu/european-union/contact/mailbox_en">Contact the webteam</a>
+							<a target="_blank" href="https://europa.eu/european-union/contact/mailbox_en">Contact the
+								webteam</a>
 						</li>
 					</ul>
 					<div class="clear"></div>
@@ -1330,33 +1479,40 @@
 							<a target="_blank" href="http://www.europarl.europa.eu/portal/en">European Parliament</a>
 						</li>
 						<li>
-							<a target="_blank" href="http://www.consilium.europa.eu/en/european-council/">European Council</a>
+							<a target="_blank" href="http://www.consilium.europa.eu/en/european-council/">European
+								Council</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://www.consilium.europa.eu/en/">Council of the European Union</a>
+							<a target="_blank" href="https://www.consilium.europa.eu/en/">Council of the European
+								Union</a>
 						</li>
 						<li>
 							<a target="_blank" href="https://ec.europa.eu/commission/index_en">European Commission</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://curia.europa.eu/jcms/jcms/index.html">Court of Justice of the European
+							<a target="_blank" href="https://curia.europa.eu/jcms/jcms/index.html">Court of Justice of
+								the European
 								Union</a>
 						</li>
 						<li>
-							<a target="_blank" href="http://www.ecb.europa.eu/home/html/index.en.html">European Central Bank</a>
+							<a target="_blank" href="http://www.ecb.europa.eu/home/html/index.en.html">European Central
+								Bank</a>
 						</li>
 					</ul>
 					<ul>
 						<li>
-							<a target="_blank" href="https://www.eca.europa.eu/en/Pages/ecadefault.aspx">European Court of
+							<a target="_blank" href="https://www.eca.europa.eu/en/Pages/ecadefault.aspx">European Court
+								of
 								Auditors</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://eeas.europa.eu/headquarters/headquarters-homepage_en">European External
+							<a target="_blank"
+								href="https://eeas.europa.eu/headquarters/headquarters-homepage_en">European External
 								Action Service</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://www.eesc.europa.eu/en">European Economic and Social Committee</a>
+							<a target="_blank" href="https://www.eesc.europa.eu/en">European Economic and Social
+								Committee</a>
 						</li>
 						<li>
 							<a target="_blank" href="https://cor.europa.eu/en">European Commitee of the Regions</a>
@@ -1365,7 +1521,8 @@
 							<a target="_blank" href="http://www.eib.org/index.htm?lang=en">European Investment Bank</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://www.ombudsman.europa.eu/en/home.faces">European Ombudsman</a>
+							<a target="_blank" href="https://www.ombudsman.europa.eu/en/home.faces">European
+								Ombudsman</a>
 						</li>
 					</ul>
 					<ul>
@@ -1373,10 +1530,12 @@
 							<a target="_blank" href="https://edps.europa.eu/">European Data Protection Supervisor</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://epso.europa.eu/home_en">European Personnel Selection Office</a>
+							<a target="_blank" href="https://epso.europa.eu/home_en">European Personnel Selection
+								Office</a>
 						</li>
 						<li>
-							<a target="_blank" href="https://publications.europa.eu/en/home">Publications Office of the European
+							<a target="_blank" href="https://publications.europa.eu/en/home">Publications Office of the
+								European
 								Union</a>
 						</li>
 						<li>
@@ -1393,7 +1552,8 @@
 					<a href="https://europa.eu/european-union/about-eu/working_en">Work for the European Union</a>
 				</li>
 				<li>
-					<a accesskey="3" href="https://europa.eu/european-union/abouteuropa/legal_notices_en">Legal notice</a>
+					<a accesskey="3" href="https://europa.eu/european-union/abouteuropa/legal_notices_en">Legal
+						notice</a>
 				</li>
 				<li>
 					<a href="https://europa.eu/european-union/abouteuropa/language-policy_en">Language policy</a>
@@ -1421,9 +1581,11 @@
 	<script
 		src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/cookie_config.js">
 	</script>
-	<script src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/consent.js">
+	<script
+		src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/consent.js">
 	</script>
-	<script src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/jquery-3.js">
+	<script
+		src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/jquery-3.js">
 	</script>
 	<script src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/jquery.js">
 	</script>
@@ -1436,7 +1598,8 @@
 		src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/webtools.js">
 	</script>
 	<script type="text/javascript"
-		src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/piwik.js"></script>
+		src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/piwik.js">
+	</script>
 	<script type="text/javascript"
 		src="Help%20and%20advice%20for%20EU%20nationals%20and%20their%20family%20-%20Your%20Europe_files/script.js">
 	</script>
