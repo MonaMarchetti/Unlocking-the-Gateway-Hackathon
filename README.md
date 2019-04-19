@@ -25,7 +25,7 @@ https://www.youtube.com/watch?v=Znkoz0-P3sc
     * Front-End : Bootstrap
     * Communication/Marketing : Pitch Speaker
 
-## Langages utilisés  
+## Technologies utilisées 
 
 * HTML5
 * CSS
@@ -42,4 +42,4 @@ https://www.youtube.com/watch?v=Znkoz0-P3sc
 * Les images ont été créées lors de l'évènement et nous appartiennent
 
   
-### Vous pouvez accéder au site via [ce lien]() ou visiter [son repository](https://github.com/Gaellga/Unlocking-the-Gateway-Hackathon)
+### Vous pouvez accéder au projet via [ce lien]() ou retourner à [son repository](https://github.com/Gaellga/Unlocking-the-Gateway-Hackathon)
